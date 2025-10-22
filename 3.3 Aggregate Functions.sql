@@ -67,7 +67,7 @@ GROUP BY product_id
 # Using the employee table, write a query to show the average salary and the max salary in
 # each department
 
-SELECT department, AVG(salary), MAX(salary)
+SELECT department, AVG(salary) medio, MAX(salary) maxi
 FROM employees
 GROUP BY department
 ;

@@ -11,7 +11,7 @@ SELECT *
 FROM customers c
 JOIN customer_orders co
 	ON c.customer_id = co.customer_id
-ORDER BY co.customer_id
+ORDER BY c.customer_id
 ;
 
 

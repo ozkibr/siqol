@@ -61,5 +61,7 @@ HAVING total_tips > 5
 SELECT product_id, COUNT(order_id) as orders
 FROM customer_orders
 GROUP BY product_id
-HAVING orders > 1
 ;
+
+SELECT order_id
+FROM customer_orders;

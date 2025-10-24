@@ -121,8 +121,9 @@ INNER JOIN (
         ON co.order_id = oi.order_id
     LEFT JOIN products p
         ON oi.product_id = p.product_id
-    GROUP BY co.order_id, co.customer_id
+    GROUP BY co.order_id
 ) o
 ON c.customer_id = o.customer_id
 GROUP BY c.customer_id
-ORDER BY c.customer_id;
+ORDER BY c.customer_id
+;

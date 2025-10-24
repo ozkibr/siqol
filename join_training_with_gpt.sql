@@ -125,5 +125,5 @@ INNER JOIN (
 ) o
 ON c.customer_id = o.customer_id
 GROUP BY c.customer_id
-ORDER BY c.customer_id
+ORDER BY MIN(o.order_id)
 ;

@@ -37,3 +37,92 @@ WHERE (
 ) < 2
 GROUP BY c.customer_id, c.first_name, c.last_name, c.city
 ORDER BY c.city, total_spent DESC;
+
+
+SELECT 
+    city,
+    COUNT(*) AS customer_count
+FROM bakery.customers
+GROUP BY city
+ORDER BY customer_count DESC;
+
+WITH ranked_customers AS (
+    SELECT 
+        c.first_name,
+        c.last_name,
+        c.city,
+        ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY c.first_name DESC) AS rn
+    FROM customers c
+)
+SELECT *
+FROM ranked_customers
+WHERE rn > 0 ;
+
+SELECT 
+    city,
+    COUNT(*) AS customer_count
+FROM customers
+GROUP BY city
+ORDER BY customer_count DESC;
+
+WITH ranked_customers AS (
+    SELECT 
+        c.first_name,
+        c.last_name,
+        c.city,
+        ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY c.first_name DESC) AS rn
+    FROM customers c
+)
+SELECT *
+FROM ranked_customers r
+WHERE r.rn = (
+    SELECT MAX(r2.rn)
+    FROM ranked_customers r2
+    WHERE r2.city = r.city
+);
+
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COALESCE(MAX(co.order_id), 'N/A') AS order_y_n
+FROM customers c
+LEFT JOIN customer_orders co
+    ON c.customer_id = co.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name;
+
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    CASE 
+        WHEN COUNT(co.order_id) > 0 THEN 'Yes'
+        ELSE 'N/A'
+    END AS order_y_n
+FROM customers c
+LEFT JOIN customer_orders co
+    ON c.customer_id = co.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY c.customer_id;
+
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COALESCE(co.order_id, 'N/A') AS order_y_n
+FROM customers c
+LEFT JOIN customer_orders co
+    ON c.customer_id = co.customer_id;
+
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COALESCE(
+        CASE WHEN COUNT(co.order_id) > 0 THEN 'Yes' END,
+        'N/A'
+    ) AS order_y_n
+FROM customers c
+LEFT JOIN customer_orders co
+    ON c.customer_id = co.customer_id
+GROUP BY c.customer_id;
